@@ -1,33 +1,68 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="bn" id="htmlTag">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>👑 ULTRA PRO MAX - অ্যাডমিন প্যানেল</title>
+    <title>👑 ULTRA PRO MAX V4 - অ্যাডমিন প্যানেল</title>
+    <!-- ফন্ট অাওসাম -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- চার্ট জেএস -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        /* থিম ভেরিয়েবল */
+        :root {
+            --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --text-color: #fff;
+            --border-color: rgba(255,255,255,0.1);
+            --accent: #00d4ff;
+            --accent-dark: #0066ff;
+            --danger: #ff6b6b;
+            --success: #00ff88;
+            --warning: #ffaa00;
+            --purple: #9d4edd;
+        }
+        
+        /* লাইট থিম */
+        [data-theme="light"] {
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --text-color: #333;
+            --border-color: rgba(0,0,0,0.1);
+            --accent: #0066ff;
         }
         
         body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background: var(--bg-gradient);
             min-height: 100vh;
             padding: 20px;
+            color: var(--text-color);
         }
         
-        /* লগিন পেজ স্টাইল */
+        /* লগিন পেজ */
         .login-container {
-            max-width: 400px;
-            margin: 100px auto;
-            background: rgba(255, 255, 255, 0.1);
+            max-width: 450px;
+            margin: 50px auto;
+            background: var(--card-bg);
             backdrop-filter: blur(10px);
-            border-radius: 20px;
+            border-radius: 30px;
             padding: 40px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid var(--border-color);
+            animation: slideUp 0.5s ease;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
         
         .login-header {
@@ -36,153 +71,286 @@
         }
         
         .login-header h1 {
-            color: #fff;
-            font-size: 2em;
+            color: var(--accent);
+            font-size: 2.2em;
             margin-bottom: 10px;
         }
         
         .login-header p {
-            color: #00d4ff;
-            font-size: 0.9em;
+            opacity: 0.8;
         }
         
-        .login-form .form-group {
+        .input-group {
             margin-bottom: 20px;
+            position: relative;
         }
         
-        .login-form input {
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent);
+        }
+        
+        .input-group input {
             width: 100%;
-            padding: 15px;
+            padding: 15px 15px 15px 45px;
             background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 10px;
-            color: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            color: var(--text-color);
             font-size: 1em;
         }
         
-        .login-form input::placeholder {
-            color: rgba(255,255,255,0.5);
-        }
-        
-        .login-form button {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #00d4ff, #0066ff);
+        .btn {
+            padding: 15px 25px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
             border: none;
-            border-radius: 10px;
+            border-radius: 15px;
             color: #fff;
-            font-size: 1.2em;
+            font-size: 1.1em;
             font-weight: bold;
             cursor: pointer;
-            transition: transform 0.3s;
+            transition: all 0.3s;
+            width: 100%;
         }
         
-        .login-form button:hover {
-            transform: translateY(-2px);
+        .btn:hover {
+            transform: translateY(-3px);
             box-shadow: 0 10px 30px rgba(0,212,255,0.4);
         }
         
-        /* ড্যাশবোর্ড স্টাইল */
+        .btn-small {
+            padding: 10px 20px;
+            font-size: 0.9em;
+            width: auto;
+        }
+        
+        /* ড্যাশবোর্ড */
         .dashboard {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
             display: none;
         }
         
-        .header {
-            background: rgba(255,255,255,0.1);
+        /* নেভ বার */
+        .navbar {
+            background: var(--card-bg);
             backdrop-filter: blur(10px);
             border-radius: 20px;
-            padding: 20px 30px;
-            margin-bottom: 30px;
+            padding: 15px 25px;
+            margin-bottom: 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 15px;
         }
         
-        .header h1 {
-            color: #00d4ff;
-            font-size: 1.8em;
+        .logo h2 {
+            color: var(--accent);
+            font-size: 1.5em;
         }
         
-        .user-info {
-            color: #fff;
+        .nav-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .theme-toggle {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            padding: 8px 15px;
+            cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 8px;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
         
         .badge {
-            background: linear-gradient(135deg, #00d4ff, #0066ff);
-            padding: 8px 20px;
-            border-radius: 20px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            padding: 5px 15px;
+            border-radius: 50px;
             font-weight: bold;
         }
         
         .logout-btn {
-            background: rgba(255,0,0,0.2);
-            color: #ff6b6b;
-            border: 1px solid #ff6b6b;
+            background: rgba(255,0,0,0.1);
+            color: var(--danger);
+            border: 1px solid var(--danger);
             padding: 8px 20px;
-            border-radius: 10px;
+            border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s;
         }
         
         .logout-btn:hover {
-            background: #ff6b6b;
+            background: var(--danger);
             color: #fff;
         }
         
+        /* স্ট্যাটস কার্ড */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
         
         .stat-card {
-            background: rgba(255,255,255,0.1);
+            background: var(--card-bg);
             backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 25px;
-            border: 1px solid rgba(255,255,255,0.1);
-            color: #fff;
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: transform 0.3s;
         }
         
-        .stat-card h3 {
-            color: #00d4ff;
-            margin-bottom: 10px;
-            font-size: 0.9em;
+        .stat-card:hover {
+            transform: translateY(-5px);
         }
         
-        .stat-card .number {
-            font-size: 2.5em;
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+        }
+        
+        .stat-info h3 {
+            font-size: 0.85em;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+        
+        .stat-info .number {
+            font-size: 1.8em;
             font-weight: bold;
         }
         
-        .main-content {
+        /* JSONBin তথ্য কার্ড */
+        .jsonbin-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            color: white;
+            border: 1px solid var(--border-color);
+        }
+        
+        .jsonbin-info h3 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 10px 20px;
+            margin-bottom: 15px;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            opacity: 0.9;
+        }
+        
+        .info-value {
+            font-family: monospace;
+            background: rgba(0,0,0,0.3);
+            padding: 5px 10px;
+            border-radius: 5px;
+            word-break: break-all;
+        }
+        
+        .copy-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid white;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+        
+        .copy-btn:hover {
+            background: white;
+            color: #667eea;
+        }
+        
+        /* নোটিফিকেশন সেকশন */
+        .notification-section {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
         
-        .card {
-            background: rgba(255,255,255,0.1);
+        .notification-card {
+            background: var(--card-bg);
             backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 25px;
-            border: 1px solid rgba(255,255,255,0.1);
-            color: #fff;
+            border: 1px solid var(--border-color);
         }
         
-        .card h2 {
-            color: #00d4ff;
+        .notification-card h2 {
+            color: var(--accent);
             margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #00d4ff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .notification-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .tab-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-color);
+            cursor: pointer;
+            flex: 1;
+        }
+        
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            border: none;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
         }
         
         .form-group {
@@ -191,65 +359,145 @@
         
         .form-group label {
             display: block;
-            margin-bottom: 5px;
-            color: #ddd;
+            margin-bottom: 8px;
+            font-weight: 500;
         }
         
-        .form-group input, .form-group select {
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%;
-            padding: 12px;
+            padding: 12px 15px;
             background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 8px;
-            color: #fff;
-        }
-        
-        .form-group input:focus, .form-group select:focus {
-            outline: none;
-            border-color: #00d4ff;
-        }
-        
-        .btn {
-            background: linear-gradient(135deg, #00d4ff, #0066ff);
-            color: #fff;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-color);
             font-size: 1em;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        /* নোটিফিকেশন প্রিভিউ */
+        .notification-preview {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .preview-title {
+            font-size: 1.2em;
             font-weight: bold;
-            width: 100%;
-            transition: transform 0.3s;
+            margin-bottom: 10px;
         }
         
-        .btn:hover {
-            transform: translateY(-2px);
+        .preview-body {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
         }
         
-        .btn-danger {
-            background: linear-gradient(135deg, #ff6b6b, #ff0000);
+        .preview-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        .tables-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+        .preview-content {
+            flex: 1;
         }
         
-        .table-container {
+        .preview-message {
+            margin-bottom: 10px;
+        }
+        
+        .preview-link {
+            display: inline-block;
+            padding: 5px 15px;
             background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
             border-radius: 20px;
-            padding: 25px;
-            border: 1px solid rgba(255,255,255,0.1);
-            color: #fff;
+            text-decoration: none;
+            color: var(--accent);
+        }
+        
+        /* নোটিফিকেশন লিস্ট */
+        .notification-list {
             max-height: 400px;
             overflow-y: auto;
         }
         
-        .table-container h2 {
-            color: #00d4ff;
-            margin-bottom: 20px;
+        .notification-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .notification-item:hover {
+            transform: translateX(5px);
+            border-color: var(--accent);
+        }
+        
+        .notification-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .notification-badge {
+            font-size: 0.75em;
+            padding: 3px 10px;
+            border-radius: 50px;
+        }
+        
+        .badge-normal {
+            background: var(--accent);
+        }
+        
+        .badge-advance {
+            background: var(--purple);
+        }
+        
+        .notification-time {
+            font-size: 0.8em;
+            opacity: 0.6;
+        }
+        
+        .notification-item-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .notification-item-preview {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+        
+        .notification-resource {
+            font-size: 0.8em;
+            color: var(--accent);
+        }
+        
+        /* টেবিল */
+        .table-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 25px;
+            overflow-x: auto;
         }
         
         table {
@@ -257,37 +505,96 @@
             border-collapse: collapse;
         }
         
-        th, td {
-            padding: 10px;
+        th {
             text-align: left;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 15px 10px;
+            color: var(--accent);
+            border-bottom: 2px solid var(--border-color);
         }
         
-        th {
-            color: #00d4ff;
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--border-color);
         }
         
         .status-active {
-            color: #00ff00;
+            color: var(--success);
         }
         
         .status-expired {
-            color: #ff0000;
+            color: var(--danger);
         }
         
         .small-btn {
-            padding: 5px 10px;
-            background: rgba(255,0,0,0.2);
-            border: 1px solid #ff0000;
-            border-radius: 5px;
-            color: #ff6b6b;
+            padding: 6px 12px;
+            background: rgba(255,0,0,0.1);
+            border: 1px solid var(--danger);
+            border-radius: 8px;
+            color: var(--danger);
             cursor: pointer;
-            font-size: 0.8em;
+            font-size: 0.9em;
+            margin: 2px;
         }
         
         .small-btn:hover {
-            background: #ff0000;
+            background: var(--danger);
             color: #fff;
+        }
+        
+        .small-btn-success {
+            border-color: var(--success);
+            color: var(--success);
+            background: rgba(0,255,0,0.1);
+        }
+        
+        .small-btn-success:hover {
+            background: var(--success);
+            color: #fff;
+        }
+        
+        .search-box {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-color);
+        }
+        
+        /* নোটিফিকেশন টোস্ট */
+        .notification-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 12px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-left: 4px solid var(--accent);
+            color: var(--text-color);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            max-width: 350px;
+        }
+        
+        .notification-toast.show {
+            transform: translateX(0);
+        }
+        
+        .toast-image {
+            width: 100%;
+            max-height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 10px;
         }
         
         .hidden {
@@ -295,235 +602,503 @@
         }
         
         @media (max-width: 768px) {
-            .stats-grid, .main-content, .tables-section {
+            .notification-section {
                 grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
+    <!-- নোটিফিকেশন টোস্ট -->
+    <div id="notificationToast" class="notification-toast">
+        <div id="toastContent"></div>
+    </div>
+
     <!-- লগিন পেজ -->
     <div id="loginPage" class="login-container">
         <div class="login-header">
-            <h1>👑 ULTRA PRO MAX</h1>
-            <p>অ্যাডমিন প্যানেল v2.0</p>
+            <h1><i class="fas fa-crown"></i> ULTRA PRO MAX V4</h1>
+            <p>JSONBin ডাটাবেজ সহ অ্যাডমিন প্যানেল</p>
         </div>
         <div class="login-form">
-            <div class="form-group">
+            <div class="input-group">
+                <i class="fas fa-user"></i>
                 <input type="text" id="adminUsername" placeholder="ইউজারনেম">
             </div>
-            <div class="form-group">
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
                 <input type="password" id="adminPassword" placeholder="পাসওয়ার্ড">
             </div>
-            <button onclick="adminLogin()">লগিন</button>
+            <button class="btn" onclick="adminLogin()"><i class="fas fa-sign-in-alt"></i> লগিন</button>
         </div>
-        <div id="loginMessage" style="color: #ff6b6b; text-align: center; margin-top: 15px;"></div>
+        <div id="loginMessage" style="color: var(--danger); text-align: center; margin-top: 15px;"></div>
     </div>
 
-    <!-- ড্যাশবোর্ড (লুকানো) -->
+    <!-- ড্যাশবোর্ড -->
     <div id="dashboard" class="dashboard">
-        <div class="header">
-            <h1>👑 ULTRA PRO MAX DASHBOARD</h1>
-            <div class="user-info">
-                <span class="badge" id="userRoleBadge">অ্যাডমিন</span>
-                <span id="usernameDisplay">admin54</span>
-                <span class="logout-btn" onclick="logout()">লগআউট</span>
+        <!-- নেভিগেশন বার -->
+        <div class="navbar">
+            <div class="logo">
+                <h2><i class="fas fa-crown" style="color: var(--accent);"></i> ULTRA PRO MAX V4</h2>
+            </div>
+            <div class="nav-controls">
+                <div class="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-sun"></i> <i class="fas fa-moon"></i>
+                </div>
+                <div class="user-profile">
+                    <span class="badge" id="userRoleBadge">অ্যাডমিন</span>
+                    <span><i class="fas fa-user-circle"></i> <span id="usernameDisplay">admin54</span></span>
+                    <span class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> লগআউট</span>
+                </div>
             </div>
         </div>
 
-        <!-- স্ট্যাটাস কার্ড -->
+        <!-- স্ট্যাটস কার্ড -->
         <div class="stats-grid">
             <div class="stat-card">
-                <h3>মোট ইউজার</h3>
-                <div class="number" id="totalUsers">0</div>
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <div class="stat-info">
+                    <h3>মোট ইউজার</h3>
+                    <div class="number" id="totalUsers">0</div>
+                </div>
             </div>
             <div class="stat-card">
-                <h3>মোট রিসেলার</h3>
-                <div class="number" id="totalResellers">0</div>
+                <div class="stat-icon"><i class="fas fa-user-tie"></i></div>
+                <div class="stat-info">
+                    <h3>মোট রিসেলার</h3>
+                    <div class="number" id="totalResellers">0</div>
+                </div>
             </div>
             <div class="stat-card">
-                <h3>সক্রিয় ইউজার</h3>
-                <div class="number" id="activeUsers">0</div>
+                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-info">
+                    <h3>সক্রিয় ইউজার</h3>
+                    <div class="number" id="activeUsers">0</div>
+                </div>
             </div>
             <div class="stat-card">
-                <h3>এক্সপায়ারড</h3>
-                <div class="number" id="expiredUsers">0</div>
+                <div class="stat-icon"><i class="fas fa-exclamation-circle"></i></div>
+                <div class="stat-info">
+                    <h3>মেয়াদোত্তীর্ণ</h3>
+                    <div class="number" id="expiredUsers">0</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-bell"></i></div>
+                <div class="stat-info">
+                    <h3>নোটিফিকেশন</h3>
+                    <div class="number" id="totalNotifications">0</div>
+                </div>
             </div>
         </div>
 
-        <!-- JSONBin কনফিগারেশন (লুকানো) -->
-        <div id="jsonbinConfig" class="hidden">
-            <input type="text" id="binId" value="6995dc7fd0ea881f40c440b9">
-            <input type="text" id="masterKey" value="$2a$10$LQXgZvaxJNdPrYE3Ez/tHe09U9/NFnBYpAzlNBPeFLBG51CluFTB2">
+        <!-- JSONBin তথ্য কার্ড -->
+        <div class="jsonbin-info">
+            <h3><i class="fas fa-database"></i> JSONBin ডাটাবেজ তথ্য</h3>
+            <div class="info-grid">
+                <div class="info-label">Bin ID:</div>
+                <div class="info-value" id="binIdDisplay">6995dc7fd0ea881f40c440b9</div>
+                
+                <div class="info-label">Master Key:</div>
+                <div class="info-value" id="masterKeyDisplay">$2a$10$LQXgZvaxJNdPrYE3Ez/tHe09U9/NFnBYpAzlNBPeFLBG51CluFTB2</div>
+                
+                <div class="info-label">API URL:</div>
+                <div class="info-value">https://api.jsonbin.io/v3/b/6995dc7fd0ea881f40c440b9</div>
+                
+                <div class="info-label">ডাটা স্ট্রাকচার:</div>
+                <div class="info-value">
+                    <pre style="margin:0; background:rgba(0,0,0,0.3); padding:10px; border-radius:5px;">
+{
+  "users": [],
+  "resellers": [],
+  "notifications": []
+}
+                    </pre>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button class="copy-btn" onclick="copyBinId()"><i class="fas fa-copy"></i> Bin ID কপি করুন</button>
+                <button class="copy-btn" onclick="copyMasterKey()"><i class="fas fa-copy"></i> Master Key কপি করুন</button>
+                <button class="copy-btn" onclick="testConnection()"><i class="fas fa-plug"></i> কানেকশন টেস্ট</button>
+            </div>
+            <div id="connectionTestResult" style="margin-top: 10px; font-size: 0.9em;"></div>
         </div>
 
-        <!-- মেইন কন্টেন্ট -->
-        <div class="main-content">
-            <!-- অ্যাডমিন: রিসেলার তৈরি -->
-            <div class="card" id="createResellerCard">
-                <h2>👥 নতুন রিসেলার তৈরি (অ্যাডমিন)</h2>
-                <div class="form-group">
-                    <label>রিসেলার ইউজারনেম:</label>
-                    <input type="text" id="resellerUsername" placeholder="reseller_name">
+        <!-- নোটিফিকেশন সেকশন -->
+        <div class="notification-section">
+            <!-- নোটিফিকেশন তৈরি -->
+            <div class="notification-card">
+                <h2><i class="fas fa-paper-plane"></i> নোটিফিকেশন পাঠান</h2>
+                
+                <div class="notification-tabs">
+                    <button class="tab-btn active" onclick="switchNotificationTab('normal')">নরমাল</button>
+                    <button class="tab-btn" onclick="switchNotificationTab('advance')">অ্যাডভান্সড</button>
                 </div>
-                <div class="form-group">
-                    <label>পাসওয়ার্ড:</label>
-                    <input type="text" id="resellerPassword" value="reseller123">
+
+                <!-- নরমাল নোটিফিকেশন -->
+                <div id="normalTab" class="tab-content active">
+                    <div class="form-group">
+                        <label>পাঠান</label>
+                        <select id="notifyToNormal">
+                            <option value="all">সবাই</option>
+                            <option value="admins">শুধু অ্যাডমিন</option>
+                            <option value="resellers">শুধু রিসেলার</option>
+                            <option value="users">শুধু সাধারণ ইউজার</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>টাইটেল</label>
+                        <input type="text" id="normalTitle" placeholder="নোটিফিকেশনের টাইটেল">
+                    </div>
+                    <div class="form-group">
+                        <label>মেসেজ</label>
+                        <textarea id="normalMessage" placeholder="নোটিফিকেশনের বিবরণ"></textarea>
+                    </div>
+                    <button class="btn btn-small" onclick="sendNormalNotification()">
+                        <i class="fas fa-paper-plane"></i> নোটিফিকেশন পাঠান
+                    </button>
                 </div>
-                <div class="form-group">
-                    <label>ইউজার লিমিট:</label>
-                    <input type="number" id="resellerUserLimit" value="5" min="1" max="100">
+
+                <!-- অ্যাডভান্সড নোটিফিকেশন -->
+                <div id="advanceTab" class="tab-content">
+                    <div class="form-group">
+                        <label>পাঠান</label>
+                        <select id="notifyToAdvance">
+                            <option value="all">সবাই</option>
+                            <option value="admins">শুধু অ্যাডমিন</option>
+                            <option value="resellers">শুধু রিসেলার</option>
+                            <option value="users">শুধু সাধারণ ইউজার</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>টাইটেল</label>
+                        <input type="text" id="advanceTitle" placeholder="নোটিফিকেশনের টাইটেল">
+                    </div>
+                    <div class="form-group">
+                        <label>মেসেজ</label>
+                        <textarea id="advanceMessage" placeholder="নোটিফিকেশনের বিবরণ"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>ইমেজ লিংক (ঐচ্ছিক)</label>
+                        <input type="url" id="advanceImage" placeholder="https://example.com/image.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label>রিসোর্স টাইপ</label>
+                        <select id="resourceType">
+                            <option value="none">কিছু না</option>
+                            <option value="update">📱 অ্যাপ আপডেট</option>
+                            <option value="video">🎥 নতুন ভিডিও</option>
+                            <option value="website">🌐 ওয়েবসাইট</option>
+                            <option value="offer">🎁 বিশেষ অফার</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>রিসোর্স লিংক</label>
+                        <input type="url" id="resourceLink" placeholder="https://example.com">
+                    </div>
+                    <button class="btn btn-small" onclick="sendAdvanceNotification()">
+                        <i class="fas fa-paper-plane"></i> অ্যাডভান্সড পাঠান
+                    </button>
                 </div>
-                <button class="btn" onclick="createReseller()">✅ রিসেলার তৈরি করুন</button>
+
+                <!-- নোটিফিকেশন প্রিভিউ -->
+                <div class="notification-preview" id="notificationPreview">
+                    <div class="preview-title">📱 প্রিভিউ</div>
+                    <div class="preview-body">
+                        <div class="preview-image" id="previewImageBox">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div class="preview-content">
+                            <div class="preview-message" id="previewMessage">
+                                <strong>টাইটেল:</strong> আপনার টাইটেল<br>
+                                <strong>মেসেজ:</strong> আপনার মেসেজ
+                            </div>
+                            <div class="preview-link" id="previewLink"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- রিসেলার: ইউজার তৈরি -->
-            <div class="card" id="createUserCard">
-                <h2>👤 নতুন ইউজার তৈরি</h2>
-                <div class="form-group">
-                    <label>ইউজারনেম:</label>
-                    <input type="text" id="username" placeholder="username">
+            <!-- নোটিফিকেশন লিস্ট -->
+            <div class="notification-card">
+                <h2><i class="fas fa-history"></i> নোটিফিকেশন ইতিহাস</h2>
+                <div class="notification-list" id="notificationList">
+                    <div style="text-align: center; padding: 20px;">লোড হচ্ছে...</div>
                 </div>
-                <div class="form-group">
-                    <label>এক্সপায়ার তারিখ:</label>
-                    <input type="date" id="expireDate">
-                </div>
-                <div class="form-group">
-                    <label>ডিভাইস লিমিট:</label>
-                    <select id="deviceLimit">
-                        <option value="1">১টি ডিভাইস</option>
-                        <option value="2">২টি ডিভাইস</option>
-                        <option value="3">৩টি ডিভাইস</option>
-                        <option value="5">৫টি ডিভাইস</option>
-                        <option value="999">আনলিমিটেড</option>
-                    </select>
-                </div>
-                <button class="btn" onclick="createUser()">✅ ইউজার তৈরি করুন</button>
-                <div id="userLimitMessage" style="color: #ffaa00; margin-top: 10px;"></div>
             </div>
+        </div>
+
+        <!-- রিসেলার তৈরি (শুধু অ্যাডমিন) -->
+        <div class="notification-card" id="createResellerCard">
+            <h2><i class="fas fa-user-plus"></i> নতুন রিসেলার তৈরি</h2>
+            <div class="form-group">
+                <label>ইউজারনেম</label>
+                <input type="text" id="resellerUsername" placeholder="reseller_name">
+            </div>
+            <div class="form-group">
+                <label>পাসওয়ার্ড</label>
+                <input type="text" id="resellerPassword" value="reseller123">
+            </div>
+            <div class="form-group">
+                <label>ইউজার লিমিট</label>
+                <input type="number" id="resellerUserLimit" value="5" min="1" max="1000">
+            </div>
+            <button class="btn" onclick="createReseller()"><i class="fas fa-save"></i> রিসেলার তৈরি করুন</button>
+        </div>
+
+        <!-- ইউজার তৈরি -->
+        <div class="notification-card" id="createUserCard">
+            <h2><i class="fas fa-user-plus"></i> নতুন ইউজার তৈরি</h2>
+            <div class="form-group">
+                <label>ইউজারনেম</label>
+                <input type="text" id="username" placeholder="username">
+            </div>
+            <div class="form-group">
+                <label>এক্সপায়ার তারিখ</label>
+                <input type="date" id="expireDate">
+            </div>
+            <div class="form-group">
+                <label>ডিভাইস লিমিট</label>
+                <select id="deviceLimit">
+                    <option value="1">১টি ডিভাইস</option>
+                    <option value="2">২টি ডিভাইস</option>
+                    <option value="3">৩টি ডিভাইস</option>
+                    <option value="5">৫টি ডিভাইস</option>
+                    <option value="10">১০টি ডিভাইস</option>
+                    <option value="999">আনলিমিটেড</option>
+                </select>
+            </div>
+            <button class="btn" onclick="createUser()"><i class="fas fa-save"></i> ইউজার তৈরি করুন</button>
+            <div id="userLimitMessage" style="color: var(--warning); margin-top: 10px;"></div>
         </div>
 
         <!-- টেবিল সেকশন -->
-        <div class="tables-section">
-            <!-- রিসেলার লিস্ট -->
-            <div class="table-container">
-                <h2>👥 রিসেলার লিস্ট</h2>
-                <table id="resellerTable">
-                    <thead>
-                        <tr>
-                            <th>ইউজারনেম</th>
-                            <th>লিমিট</th>
-                            <th>ব্যবহার</th>
-                            <th>অ্যাকশন</th>
-                        </tr>
-                    </thead>
-                    <tbody id="resellerTableBody">
-                        <tr><td colspan="4">লোড হচ্ছে...</td></tr>
-                    </tbody>
-                </table>
-            </div>
+        <div class="table-container">
+            <h2><i class="fas fa-list"></i> রিসেলার লিস্ট</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ইউজারনেম</th>
+                        <th>লিমিট</th>
+                        <th>ব্যবহার</th>
+                        <th>বাকি</th>
+                        <th>অ্যাকশন</th>
+                    </tr>
+                </thead>
+                <tbody id="resellerTableBody">
+                    <tr><td colspan="5">লোড হচ্ছে...</td></tr>
+                </tbody>
+            </table>
+        </div>
 
-            <!-- ইউজার লিস্ট -->
-            <div class="table-container">
-                <h2>📋 ইউজার লিস্ট</h2>
-                <table id="userTable">
-                    <thead>
-                        <tr>
-                            <th>ইউজারনেম</th>
-                            <th>এক্সপায়ার</th>
-                            <th>ডিভাইস</th>
-                            <th>ক্রিয়েটর</th>
-                            <th>স্ট্যাটাস</th>
-                            <th>অ্যাকশন</th>
-                        </tr>
-                    </thead>
-                    <tbody id="userTableBody">
-                        <tr><td colspan="6">লোড হচ্ছে...</td></tr>
-                    </tbody>
-                </table>
-            </div>
+        <div class="table-container">
+            <h2><i class="fas fa-list"></i> ইউজার লিস্ট</h2>
+            <table id="userTable">
+                <thead>
+                    <tr>
+                        <th>ইউজারনেম</th>
+                        <th>এক্সপায়ার</th>
+                        <th>ডিভাইস</th>
+                        <th>ক্রিয়েটর</th>
+                        <th>স্ট্যাটাস</th>
+                        <th>অ্যাকশন</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                    <tr><td colspan="6">লোড হচ্ছে...</td></tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
     <script>
-        // গ্লোবাল ভেরিয়েবল
+        // ========== JSONBin কনফিগারেশন ==========
         const BIN_ID = "6995dc7fd0ea881f40c440b9";
         const MASTER_KEY = "$2a$10$LQXgZvaxJNdPrYE3Ez/tHe09U9/NFnBYpAzlNBPeFLBG51CluFTB2";
         
+        // গ্লোবাল ভেরিয়েবল
         let currentUser = null;
-        let usersData = { users: [], resellers: [] };
+        let usersData = { 
+            users: [], 
+            resellers: [],
+            notifications: [] 
+        };
         
-        // অ্যাডমিন ক্রেডেনশিয়াল
         const ADMIN_USERNAME = "admin54";
         const ADMIN_PASSWORD = "admin54";
 
-        // পেজ লোড হওয়ার সময়
-        window.onload = function() {
-            checkLogin();
-        };
-
-        // অ্যাডমিন/রিসেলার লগিন
-        async function adminLogin() {
-            const username = document.getElementById('adminUsername').value;
-            const password = document.getElementById('adminPassword').value;
-            
-            // আগে ডাটা লোড করুন
-            await loadDataForLogin();
-            
-            // ১. অ্যাডমিন চেক
-            if(username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-                currentUser = {
-                    username: username,
-                    role: 'admin',
-                    userLimit: 999999
-                };
-                
-                sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
-                loadDashboard();
-                return;
-            }
-            
-            // ২. রিসেলার চেক
-            if(usersData.resellers && usersData.resellers.length > 0) {
-                const reseller = usersData.resellers.find(r => r.username === username && r.password === password);
-                
-                if(reseller) {
-                    currentUser = {
-                        username: reseller.username,
-                        role: 'reseller',
-                        userLimit: reseller.userLimit
-                    };
-                    
-                    sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
-                    loadDashboard();
-                    return;
-                }
-            }
-            
-            // ৩. কিছুই না মিললে
-            document.getElementById('loginMessage').innerText = 'ভুল ইউজারনেম বা পাসওয়ার্ড!';
+        // ========== JSONBin ফাংশন ==========
+        function copyBinId() {
+            navigator.clipboard.writeText(BIN_ID);
+            showToast("✅ Bin ID কপি হয়েছে!");
         }
-
-        // শুধু লগিনের জন্য ডাটা লোড
-        async function loadDataForLogin() {
+        
+        function copyMasterKey() {
+            navigator.clipboard.writeText(MASTER_KEY);
+            showToast("✅ Master Key কপি হয়েছে!");
+        }
+        
+        async function testConnection() {
+            const resultDiv = document.getElementById('connectionTestResult');
+            resultDiv.innerHTML = "⏳ কানেকশন টেস্ট করা হচ্ছে...";
+            
             try {
                 const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
                     method: 'GET',
                     headers: { 'X-Master-Key': MASTER_KEY }
                 });
                 
+                if(response.ok) {
+                    const data = await response.json();
+                    resultDiv.innerHTML = "✅ কানেকশন সফল! JSONBin ঠিক আছে।";
+                    showToast("✅ JSONBin কানেক্ট হয়েছে!");
+                } else {
+                    resultDiv.innerHTML = "❌ কানেকশন ব্যর্থ! স্ট্যাটাস: " + response.status;
+                }
+            } catch(error) {
+                resultDiv.innerHTML = "❌ এরর: " + error.message;
+            }
+        }
+
+        // থিম টগল
+        function toggleTheme() {
+            const html = document.getElementById('htmlTag');
+            const currentTheme = html.getAttribute('data-theme');
+            if(currentTheme === 'light') {
+                html.removeAttribute('data-theme');
+                showToast('ডার্ক মোড চালু হয়েছে');
+            } else {
+                html.setAttribute('data-theme', 'light');
+                showToast('লাইট মোড চালু হয়েছে');
+            }
+        }
+
+        // টোস্ট দেখান
+        function showToast(message) {
+            const toast = document.getElementById('notificationToast');
+            const content = document.getElementById('toastContent');
+            content.innerHTML = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // নোটিফিকেশন ট্যাব সুইচ
+        function switchNotificationTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            if(tab === 'normal') {
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+                document.getElementById('normalTab').classList.add('active');
+            } else {
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+                document.getElementById('advanceTab').classList.add('active');
+            }
+        }
+
+        // প্রিভিউ আপডেট
+        function updatePreview() {
+            const activeTab = document.querySelector('.tab-content.active').id;
+            const previewMsg = document.getElementById('previewMessage');
+            const previewLink = document.getElementById('previewLink');
+            const previewImage = document.getElementById('previewImageBox');
+            
+            if(activeTab === 'normalTab') {
+                const title = document.getElementById('normalTitle').value || 'নরমাল নোটিফিকেশন';
+                const msg = document.getElementById('normalMessage').value || 'নরমাল নোটিফিকেশন মেসেজ';
+                previewMsg.innerHTML = `<strong>${title}</strong><br>${msg}`;
+                previewLink.innerHTML = '';
+                previewImage.innerHTML = '<i class="fas fa-image"></i>';
+            } else {
+                const title = document.getElementById('advanceTitle').value || 'অ্যাডভান্সড নোটিফিকেশন';
+                const msg = document.getElementById('advanceMessage').value || 'অ্যাডভান্সড নোটিফিকেশন মেসেজ';
+                const resourceLink = document.getElementById('resourceLink').value;
+                const imageLink = document.getElementById('advanceImage').value;
+                
+                previewMsg.innerHTML = `<strong>${title}</strong><br>${msg}`;
+                
+                if(imageLink) {
+                    previewImage.innerHTML = `<img src="${imageLink}" style="width: 80px; height: 80px; border-radius: 10px; object-fit: cover;">`;
+                } else {
+                    previewImage.innerHTML = '<i class="fas fa-image"></i>';
+                }
+                
+                if(resourceLink) {
+                    previewLink.innerHTML = `🔗 <a href="${resourceLink}" target="_blank">${resourceLink.substring(0,30)}...</a>`;
+                } else {
+                    previewLink.innerHTML = '';
+                }
+            }
+        }
+
+        // ইভেন্ট লিসেনার
+        document.getElementById('normalTitle')?.addEventListener('input', updatePreview);
+        document.getElementById('normalMessage')?.addEventListener('input', updatePreview);
+        document.getElementById('advanceTitle')?.addEventListener('input', updatePreview);
+        document.getElementById('advanceMessage')?.addEventListener('input', updatePreview);
+        document.getElementById('advanceImage')?.addEventListener('input', updatePreview);
+        document.getElementById('resourceType')?.addEventListener('change', updatePreview);
+        document.getElementById('resourceLink')?.addEventListener('input', updatePreview);
+
+        window.onload = function() {
+            checkLogin();
+        };
+
+        async function adminLogin() {
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+            
+            await loadDataForLogin();
+            
+            if(username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                currentUser = {
+                    username: username,
+                    role: 'admin',
+                    userLimit: 999999
+                };
+                sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+                showToast('স্বাগতম অ্যাডমিন!');
+                loadDashboard();
+                return;
+            }
+            
+            if(usersData.resellers && usersData.resellers.length > 0) {
+                const reseller = usersData.resellers.find(r => r.username === username && r.password === password);
+                if(reseller) {
+                    currentUser = {
+                        username: reseller.username,
+                        role: 'reseller',
+                        userLimit: reseller.userLimit
+                    };
+                    sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    showToast('স্বাগতম রিসেলার!');
+                    loadDashboard();
+                    return;
+                }
+            }
+            
+            document.getElementById('loginMessage').innerText = 'ভুল ইউজারনেম বা পাসওয়ার্ড!';
+            showToast('লগিন ব্যর্থ!');
+        }
+
+        async function loadDataForLogin() {
+            try {
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                    method: 'GET',
+                    headers: { 'X-Master-Key': MASTER_KEY }
+                });
                 const data = await response.json();
                 usersData = data.record;
-                
                 if(!usersData.users) usersData.users = [];
                 if(!usersData.resellers) usersData.resellers = [];
-                
+                if(!usersData.notifications) usersData.notifications = [];
             } catch(error) {
                 console.log('ডাটা লোড সমস্যা:', error);
             }
         }
 
-        // চেক লগিন
         function checkLogin() {
             const savedUser = sessionStorage.getItem('currentUser');
             if(savedUser) {
@@ -532,7 +1107,6 @@
             }
         }
 
-        // ড্যাশবোর্ড লোড
         async function loadDashboard() {
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';
@@ -541,71 +1115,67 @@
             document.getElementById('userRoleBadge').innerText = 
                 currentUser.role === 'admin' ? '👑 অ্যাডমিন' : '🔄 রিসেলার';
             
-            // অ্যাডমিন হলে রিসেলার তৈরি কার্ড দেখান, না হলে লুকান
-            if(currentUser.role === 'admin') {
-                document.getElementById('createResellerCard').style.display = 'block';
-            } else {
-                document.getElementById('createResellerCard').style.display = 'none';
-            }
+            document.getElementById('createResellerCard').style.display = 
+                currentUser.role === 'admin' ? 'block' : 'none';
             
             await loadData();
         }
 
-        // JSONBin থেকে ডাটা লোড
         async function loadData() {
             try {
                 const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
                     method: 'GET',
                     headers: { 'X-Master-Key': MASTER_KEY }
                 });
-                
                 const data = await response.json();
                 usersData = data.record;
                 
                 if(!usersData.users) usersData.users = [];
                 if(!usersData.resellers) usersData.resellers = [];
+                if(!usersData.notifications) usersData.notifications = [];
                 
                 updateStats();
                 displayUsers();
                 displayResellers();
+                displayNotifications();
                 
             } catch(error) {
-                alert('ডাটা লোড করতে সমস্যা!');
+                showToast('ডাটা লোড করতে সমস্যা!');
             }
         }
 
-        // স্ট্যাটাস আপডেট
         function updateStats() {
             const today = new Date();
+            today.setHours(0,0,0,0);
             
             const totalUsers = usersData.users.length;
             const totalResellers = usersData.resellers.length;
             const activeUsers = usersData.users.filter(u => new Date(u.expireDate) >= today).length;
             const expiredUsers = totalUsers - activeUsers;
+            const totalNotifications = usersData.notifications.length;
             
             document.getElementById('totalUsers').innerText = totalUsers;
             document.getElementById('totalResellers').innerText = totalResellers;
             document.getElementById('activeUsers').innerText = activeUsers;
             document.getElementById('expiredUsers').innerText = expiredUsers;
+            document.getElementById('totalNotifications').innerText = totalNotifications;
             
-            // রিসেলার হলে ইউজার লিমিট মেসেজ দেখান
             if(currentUser.role !== 'admin') {
                 const reseller = usersData.resellers.find(r => r.username === currentUser.username);
                 if(reseller) {
                     const used = usersData.users.filter(u => u.createdBy === currentUser.username).length;
                     const left = reseller.userLimit - used;
                     document.getElementById('userLimitMessage').innerHTML = 
-                        `📊 আপনার লিমিট: ${used}/${reseller.userLimit} (বাকি: ${left})`;
+                        `<i class="fas fa-info-circle"></i> আপনার লিমিট: ${used}/${reseller.userLimit} (বাকি: ${left})`;
                 }
             }
         }
 
-        // ইউজার ডিসপ্লে
         function displayUsers() {
             const tbody = document.getElementById('userTableBody');
             const today = new Date();
+            today.setHours(0,0,0,0);
             
-            // রিসেলার হলে শুধু তার তৈরি ইউজার দেখাবে
             let filteredUsers = usersData.users;
             if(currentUser.role === 'reseller') {
                 filteredUsers = usersData.users.filter(u => u.createdBy === currentUser.username);
@@ -618,44 +1188,48 @@
             
             tbody.innerHTML = '';
             
-            filteredUsers.forEach((user, index) => {
+            filteredUsers.forEach(user => {
                 const expireDate = new Date(user.expireDate);
+                expireDate.setHours(0,0,0,0);
                 const status = expireDate >= today ? 'status-active' : 'status-expired';
                 const statusText = expireDate >= today ? '✅ সক্রিয়' : '❌ মেয়াদোত্তীর্ণ';
                 
                 const row = `<tr>
-                    <td>${user.username}</td>
+                    <td><i class="fas fa-user"></i> ${user.username}</td>
                     <td>${user.expireDate}</td>
                     <td>${user.currentDevices ? user.currentDevices.length : 0}/${user.deviceLimit === 999 ? '∞' : user.deviceLimit}</td>
                     <td>${user.createdBy || 'অ্যাডমিন'}</td>
                     <td class="${status}">${statusText}</td>
-                    <td><button class="small-btn" onclick="deleteUser('${user.username}')">ডিলিট</button></td>
+                    <td>
+                        <button class="small-btn" onclick="deleteUser('${user.username}')"><i class="fas fa-trash"></i></button>
+                    </td>
                 </tr>`;
                 tbody.innerHTML += row;
             });
         }
 
-        // রিসেলার ডিসপ্লে
         function displayResellers() {
             const tbody = document.getElementById('resellerTableBody');
             
             if(!usersData.resellers || usersData.resellers.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4">কোন রিসেলার নেই</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5">কোন রিসেলার নেই</td></tr>';
                 return;
             }
             
             tbody.innerHTML = '';
             
-            usersData.resellers.forEach((reseller, index) => {
+            usersData.resellers.forEach(reseller => {
                 const used = usersData.users.filter(u => u.createdBy === reseller.username).length;
+                const left = reseller.userLimit - used;
                 
                 const row = `<tr>
-                    <td>${reseller.username}</td>
+                    <td><i class="fas fa-user-tie"></i> ${reseller.username}</td>
                     <td>${reseller.userLimit}</td>
                     <td>${used}</td>
+                    <td><span style="color: ${left > 0 ? 'var(--success)' : 'var(--danger)'};">${left}</span></td>
                     <td>
                         ${currentUser.role === 'admin' ? 
-                            `<button class="small-btn" onclick="deleteReseller('${reseller.username}')">ডিলিট</button>` : 
+                            `<button class="small-btn" onclick="deleteReseller('${reseller.username}')"><i class="fas fa-trash"></i></button>` : 
                             '---'}
                     </td>
                 </tr>`;
@@ -663,10 +1237,152 @@
             });
         }
 
-        // রিসেলার তৈরি (শুধু অ্যাডমিন)
+        function displayNotifications() {
+            const list = document.getElementById('notificationList');
+            
+            if(!usersData.notifications || usersData.notifications.length === 0) {
+                list.innerHTML = '<div style="text-align: center; padding: 20px;">কোন নোটিফিকেশন নেই</div>';
+                return;
+            }
+            
+            list.innerHTML = '';
+            
+            usersData.notifications.slice().reverse().forEach(notif => {
+                const time = new Date(notif.timestamp).toLocaleString();
+                
+                const item = document.createElement('div');
+                item.className = 'notification-item';
+                item.onclick = () => showNotificationDetails(notif);
+                
+                let content = `
+                    <div class="notification-item-header">
+                        <span class="notification-badge ${notif.type === 'advance' ? 'badge-advance' : 'badge-normal'}">${notif.type === 'advance' ? '📱 অ্যাডভান্সড' : '📝 নরমাল'}</span>
+                        <span class="notification-time">${time}</span>
+                    </div>
+                    <div class="notification-item-title">${notif.title}</div>
+                    <div class="notification-item-preview">${notif.message.substring(0,50)}${notif.message.length > 50 ? '...' : ''}</div>
+                `;
+                
+                if(notif.resourceLink) {
+                    content += `<div class="notification-resource"><i class="fas fa-link"></i> রিসোর্স সহ</div>`;
+                }
+                
+                content += `<div style="font-size: 0.8em; margin-top: 5px;">পাঠানো হয়েছে: ${notif.sentTo}</div>`;
+                
+                item.innerHTML = content;
+                list.appendChild(item);
+            });
+        }
+
+        function showNotificationDetails(notif) {
+            let details = `📢 ${notif.title}\n\n${notif.message}`;
+            if(notif.imageLink) details += `\n\n🖼️ ইমেজ: ${notif.imageLink}`;
+            if(notif.resourceLink) details += `\n\n🔗 রিসোর্স: ${notif.resourceLink}`;
+            details += `\n\n👥 পাঠানো হয়েছে: ${notif.sentTo}\n⏰ সময়: ${new Date(notif.timestamp).toLocaleString()}`;
+            alert(details);
+        }
+
+        async function sendNormalNotification() {
+            const to = document.getElementById('notifyToNormal').value;
+            const title = document.getElementById('normalTitle').value;
+            const message = document.getElementById('normalMessage').value;
+            
+            if(!title || !message) {
+                showToast('টাইটেল ও মেসেজ দিন!');
+                return;
+            }
+            
+            let sentToText = '';
+            switch(to) {
+                case 'all': sentToText = 'সবাই'; break;
+                case 'admins': sentToText = 'শুধু অ্যাডমিন'; break;
+                case 'resellers': sentToText = 'শুধু রিসেলার'; break;
+                case 'users': sentToText = 'শুধু সাধারণ ইউজার'; break;
+            }
+            
+            const notification = {
+                id: Date.now(),
+                type: 'normal',
+                title: title,
+                message: message,
+                sentTo: sentToText,
+                target: to,
+                timestamp: new Date().toISOString()
+            };
+            
+            if(!usersData.notifications) usersData.notifications = [];
+            usersData.notifications.push(notification);
+            
+            await updateJSONBin();
+            
+            document.getElementById('normalTitle').value = '';
+            document.getElementById('normalMessage').value = '';
+            
+            displayNotifications();
+            showToast(`✅ নরমাল নোটিফিকেশন পাঠানো হয়েছে (${sentToText})`);
+        }
+
+        async function sendAdvanceNotification() {
+            const to = document.getElementById('notifyToAdvance').value;
+            const title = document.getElementById('advanceTitle').value;
+            const message = document.getElementById('advanceMessage').value;
+            const imageLink = document.getElementById('advanceImage').value;
+            const resourceType = document.getElementById('resourceType').value;
+            const resourceLink = document.getElementById('resourceLink').value;
+            
+            if(!title || !message) {
+                showToast('টাইটেল ও মেসেজ দিন!');
+                return;
+            }
+            
+            let sentToText = '';
+            switch(to) {
+                case 'all': sentToText = 'সবাই'; break;
+                case 'admins': sentToText = 'শুধু অ্যাডমিন'; break;
+                case 'resellers': sentToText = 'শুধু রিসেলার'; break;
+                case 'users': sentToText = 'শুধু সাধারণ ইউজার'; break;
+            }
+            
+            let resourceTypeText = '';
+            switch(resourceType) {
+                case 'update': resourceTypeText = '📱 অ্যাপ আপডেট'; break;
+                case 'video': resourceTypeText = '🎥 ভিডিও'; break;
+                case 'website': resourceTypeText = '🌐 ওয়েবসাইট'; break;
+                case 'offer': resourceTypeText = '🎁 অফার'; break;
+                default: resourceTypeText = 'কিছু না';
+            }
+            
+            const notification = {
+                id: Date.now(),
+                type: 'advance',
+                title: title,
+                message: message,
+                imageLink: imageLink || null,
+                resourceType: resourceTypeText,
+                resourceLink: resourceLink || null,
+                sentTo: sentToText,
+                target: to,
+                timestamp: new Date().toISOString()
+            };
+            
+            if(!usersData.notifications) usersData.notifications = [];
+            usersData.notifications.push(notification);
+            
+            await updateJSONBin();
+            
+            document.getElementById('advanceTitle').value = '';
+            document.getElementById('advanceMessage').value = '';
+            document.getElementById('advanceImage').value = '';
+            document.getElementById('resourceType').value = 'none';
+            document.getElementById('resourceLink').value = '';
+            
+            displayNotifications();
+            showToast(`✅ অ্যাডভান্সড নোটিফিকেশন পাঠানো হয়েছে (${sentToText})`);
+        }
+
         async function createReseller() {
             if(currentUser.role !== 'admin') {
-                alert('শুধু অ্যাডমিন রিসেলার তৈরি করতে পারবেন!');
+                showToast('শুধু অ্যাডমিন রিসেলার তৈরি করতে পারবেন!');
                 return;
             }
             
@@ -675,13 +1391,12 @@
             const userLimit = parseInt(document.getElementById('resellerUserLimit').value);
             
             if(!username) {
-                alert('ইউজারনেম দিন!');
+                showToast('ইউজারনেম দিন!');
                 return;
             }
             
-            // চেক করা ইউজার আগে আছে কিনা
             if(usersData.resellers.find(r => r.username === username)) {
-                alert('এই ইউজারনেম আগে থেকেই আছে!');
+                showToast('এই ইউজারনেম আগে থেকেই আছে!');
                 return;
             }
             
@@ -698,35 +1413,32 @@
             document.getElementById('resellerUsername').value = '';
             displayResellers();
             updateStats();
-            alert('✅ রিসেলার তৈরি হয়েছে!');
+            showToast('✅ রিসেলার তৈরি হয়েছে!');
         }
 
-        // ইউজার তৈরি
         async function createUser() {
             const username = document.getElementById('username').value;
             const expireDate = document.getElementById('expireDate').value;
             const deviceLimit = document.getElementById('deviceLimit').value;
             
             if(!username || !expireDate) {
-                alert('সব ফিল্ড পূরণ করুন!');
+                showToast('সব ফিল্ড পূরণ করুন!');
                 return;
             }
             
-            // রিসেলার হলে লিমিট চেক
             if(currentUser.role !== 'admin') {
                 const reseller = usersData.resellers.find(r => r.username === currentUser.username);
                 if(reseller) {
                     const used = usersData.users.filter(u => u.createdBy === currentUser.username).length;
                     if(used >= reseller.userLimit) {
-                        alert('আপনার ইউজার লিমিট শেষ!');
+                        showToast('আপনার ইউজার লিমিট শেষ!');
                         return;
                     }
                 }
             }
             
-            // চেক করা ইউজার আগে আছে কিনা
             if(usersData.users.find(u => u.username === username)) {
-                alert('এই ইউজারনেম আগে থেকেই আছে!');
+                showToast('এই ইউজারনেম আগে থেকেই আছে!');
                 return;
             }
             
@@ -747,23 +1459,22 @@
             
             displayUsers();
             updateStats();
-            alert('✅ ইউজার তৈরি হয়েছে!');
+            showToast('✅ ইউজার তৈরি হয়েছে!');
         }
 
-        // ইউজার ডিলিট
         async function deleteUser(username) {
             if(confirm(`আপনি কি ${username} কে ডিলিট করতে চান?`)) {
                 usersData.users = usersData.users.filter(u => u.username !== username);
                 await updateJSONBin();
                 displayUsers();
                 updateStats();
+                showToast('🗑️ ইউজার ডিলিট হয়েছে!');
             }
         }
 
-        // রিসেলার ডিলিট (শুধু অ্যাডমিন)
         async function deleteReseller(username) {
             if(currentUser.role !== 'admin') {
-                alert('শুধু অ্যাডমিন রিসেলার ডিলিট করতে পারবেন!');
+                showToast('শুধু অ্যাডমিন রিসেলার ডিলিট করতে পারবেন!');
                 return;
             }
             
@@ -772,10 +1483,10 @@
                 await updateJSONBin();
                 displayResellers();
                 updateStats();
+                showToast('🗑️ রিসেলার ডিলিট হয়েছে!');
             }
         }
 
-        // JSONBin আপডেট
         async function updateJSONBin() {
             try {
                 const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
@@ -792,13 +1503,13 @@
                 }
                 
             } catch(error) {
-                alert('JSONBin আপডেট করতে সমস্যা!');
+                showToast('JSONBin আপডেট করতে সমস্যা!');
             }
         }
 
-        // লগআউট
         function logout() {
             sessionStorage.removeItem('currentUser');
+            showToast('লগআউট করা হয়েছে!');
             location.reload();
         }
     </script>
