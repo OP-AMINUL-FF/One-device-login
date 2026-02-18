@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 অ্যাডমিন প্যানেল - স্কেচওয়্যার কন্ট্রোলার</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .card h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 600;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border 0.3s;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            width: 100%;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        }
+        
+        .user-list {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            grid-column: 1 / -1;
+        }
+        
+        .user-list h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+        }
+        
+        tr:hover {
+            background: #f1f1f1;
+        }
+        
+        .status-active {
+            color: green;
+            font-weight: bold;
+        }
+        
+        .status-expired {
+            color: red;
+            font-weight: bold;
+        }
+        
+        .delete-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .delete-btn:hover {
+            background: #ff6b81;
+        }
+        
+        .config-section {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 0 30px 20px 30px;
+        }
+        
+        .config-info {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .info-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 অ্যাডমিন কন্ট্রোল প্যানেল</h1>
+            <p>Sketchware Pro - One Device Login & Expiry কন্ট্রোল সিস্টেম</p>
+        </div>
+        
+        <!-- JSONBin কনফিগারেশন সেকশন (অটো-কনফিগারড) -->
+        <div class="config-section">
+            <h3>🔧 JSONBin কনফিগারেশন (অটো-কানেক্টেড)</h3>
+            <div class="config-info">
+                <span class="info-badge">🆔 Bin ID: 6995dc7fd0ea881f40c440b9</span>
+                <span class="info-badge">🔑 Master Key: $2a$10$LQXgZvaxJNdPrYE3Ez/tHe09U9/NFnBYpAzlNBPeFLBG51CluFTB2</span>
+                <span class="info-badge">✅ স্ট্যাটাস: কানেক্টেড</span>
+            </div>
+            <div id="connectionStatus" class="success-message">
+                সফলভাবে JSONBin-এর সাথে কানেক্ট হয়েছে!
+            </div>
+            <div id="connectionError" class="error-message">
+                কানেকশন error! চেক করুন।
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <!-- ইউজার ক্রিয়েট কার্ড -->
+            <div class="card">
+                <h2>👤 নতুন ইউজার ক্রিয়েট</h2>
+                <div class="form-group">
+                    <label>ইউজারনেম:</label>
+                    <input type="text" id="username" placeholder="ইউজারনেম দিন (যেমন: tanvir123)">
+                </div>
+                <div class="form-group">
+                    <label>এক্সপায়ার তারিখ:</label>
+                    <input type="date" id="expireDate">
+                </div>
+                <div class="form-group">
+                    <label>ডিভাইস লিমিট:</label>
+                    <select id="deviceLimit">
+                        <option value="1">১টি ডিভাইস</option>
+                        <option value="2">২টি ডিভাইস</option>
+                        <option value="3">৩টি ডিভাইস</option>
+                        <option value="5">৫টি ডিভাইস</option>
+                        <option value="10">১০টি ডিভাইস</option>
+                        <option value="999">আনলিমিটেড</option>
+                    </select>
+                </div>
+                <button class="btn" onclick="createUser()">✅ ইউজার ক্রিয়েট করুন</button>
+            </div>
+            
+            <!-- সার্চ ও ভেরিফাই কার্ড -->
+            <div class="card">
+                <h2>🔍 ইউজার সার্চ</h2>
+                <div class="form-group">
+                    <label>ইউজারনেম:</label>
+                    <input type="text" id="searchUsername" placeholder="সার্চ করার জন্য ইউজারনেম দিন">
+                </div>
+                <button class="btn btn-secondary" onclick="searchUser()">🔎 সার্চ করুন</button>
+                
+                <div id="searchResult" style="margin-top: 20px; padding: 15px; background: #e9ecef; border-radius: 8px; display: none;">
+                    <!-- সার্চ রেজাল্ট এখানে দেখাবে -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- ইউজার লিস্ট টেবিল -->
+        <div class="user-list">
+            <h2>📋 সব ইউজার লিস্ট</h2>
+            <button class="btn" onclick="loadUsers()" style="margin-bottom: 20px; width: auto;">🔄 রিফ্রেশ লিস্ট</button>
+            <table id="userTable">
+                <thead>
+                    <tr>
+                        <th>ইউজারনেম</th>
+                        <th>এক্সপায়ার তারিখ</th>
+                        <th>ডিভাইস লিমিট</th>
+                        <th>বর্তমান ডিভাইস</th>
+                        <th>স্ট্যাটাস</th>
+                        <th>অ্যাকশন</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                    <tr>
+                        <td colspan="6" style="text-align: center;">ডাটা লোড হচ্ছে...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // আপনার JSONBin কনফিগারেশন
+        const BIN_ID = '6995dc7fd0ea881f40c440b9';
+        const MASTER_KEY = '$2a$10$LQXgZvaxJNdPrYE3Ez/tHe09U9/NFnBYpAzlNBPeFLBG51CluFTB2';
+        
+        // গ্লোবাল ভেরিয়েবল
+        let usersData = { users: [] };
+
+        // পেজ লোড হওয়ার সাথে সাথে ডাটা লোড করুন
+        window.onload = function() {
+            loadUsers();
+        };
+
+        // JSONBin থেকে ডাটা লোড করার ফাংশন
+        async function loadUsers() {
+            showConnectionStatus('connecting');
+            
+            try {
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                    method: 'GET',
+                    headers: {
+                        'X-Master-Key': MASTER_KEY
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('Received data:', data); // ডিবাগ করার জন্য
+                
+                // ডাটা স্ট্রাকচার চেক করুন
+                if (data.record) {
+                    usersData = data.record;
+                } else if (data.users) {
+                    usersData = data;
+                } else {
+                    usersData = { users: [] };
+                }
+                
+                // নিশ্চিত করুন users অ্যারে আছে
+                if (!usersData.users) {
+                    usersData.users = [];
+                }
+                
+                displayUsers();
+                showConnectionStatus('success');
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showConnectionStatus('error');
+                
+                // এরর হলেও খালি অ্যারে দেখান
+                usersData = { users: [] };
+                displayUsers();
+            }
+        }
+
+        // কানেকশন স্ট্যাটাস দেখানোর ফাংশন
+        function showConnectionStatus(status) {
+            const successDiv = document.getElementById('connectionStatus');
+            const errorDiv = document.getElementById('connectionError');
+            
+            if (status === 'success') {
+                successDiv.style.display = 'block';
+                errorDiv.style.display = 'none';
+                setTimeout(() => {
+                    successDiv.style.display = 'none';
+                }, 3000);
+            } else if (status === 'error') {
+                errorDiv.style.display = 'block';
+                successDiv.style.display = 'none';
+            }
+        }
+
+        // ইউজার ডিসপ্লে করার ফাংশন
+        function displayUsers() {
+            const tableBody = document.getElementById('userTableBody');
+            
+            if (!usersData.users || usersData.users.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">কোন ইউজার নেই। নতুন ইউজার ক্রিয়েট করুন।</td></tr>';
+                return;
+            }
+            
+            tableBody.innerHTML = '';
+            const today = new Date();
+            
+            usersData.users.forEach((user, index) => {
+                const expireDate = new Date(user.expireDate);
+                const status = expireDate >= today ? 'active' : 'expired';
+                const statusClass = status === 'active' ? 'status-active' : 'status-expired';
+                const statusText = status === 'active' ? '✅ সক্রিয়' : '❌ মেয়াদোত্তীর্ণ';
+                
+                // ডিভাইস লিমিট দেখান
+                let deviceLimitText = user.deviceLimit;
+                if (user.deviceLimit === 999) deviceLimitText = '∞';
+                
+                // বর্তমান ডিভাইস সংখ্যা
+                const currentDevices = user.currentDevices ? user.currentDevices.length : 0;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.username || 'N/A'}</td>
+                    <td>${user.expireDate || 'N/A'}</td>
+                    <td>${deviceLimitText}</td>
+                    <td>${currentDevices}</td>
+                    <td class="${statusClass}">${statusText}</td>
+                    <td>
+                        <button class="delete-btn" onclick="deleteUser('${user.username}')">ডিলিট</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // নতুন ইউজার ক্রিয়েট ফাংশন
+        async function createUser() {
+            const username = document.getElementById('username').value.trim();
+            const expireDate = document.getElementById('expireDate').value;
+            const deviceLimit = document.getElementById('deviceLimit').value;
+            
+            if (!username || !expireDate) {
+                alert('⚠️ ইউজারনেম এবং এক্সপায়ার তারিখ দিন!');
+                return;
+            }
+            
+            // চেক করা ইউজার আগে থেকে আছে কিনা
+            const existingUser = usersData.users.find(u => u.username === username);
+            if (existingUser) {
+                alert('❌ এই ইউজারনেম আগে থেকেই আছে! অন্য ইউজারনেম দিন।');
+                return;
+            }
+            
+            // নতুন ইউজার অবজেক্ট
+            const newUser = {
+                username: username,
+                expireDate: expireDate,
+                deviceLimit: parseInt(deviceLimit),
+                currentDevices: [],
+                createdAt: new Date().toISOString()
+            };
+            
+            usersData.users.push(newUser);
+            
+            // JSONBin আপডেট করা
+            const success = await updateJSONBin();
+            
+            if (success) {
+                // ফর্ম ক্লিয়ার করা
+                document.getElementById('username').value = '';
+                document.getElementById('expireDate').value = '';
+                
+                displayUsers();
+                alert('✅ নতুন ইউজার সফলভাবে ক্রিয়েট হয়েছে!');
+            } else {
+                // ব্যর্থ হলে রিমুভ করে দিন
+                usersData.users = usersData.users.filter(u => u.username !== username);
+            }
+        }
+
+        // ইউজার ডিলিট ফাংশন
+        async function deleteUser(username) {
+            if (confirm(`আপনি কি "${username}" কে ডিলিট করতে চান?`)) {
+                usersData.users = usersData.users.filter(u => u.username !== username);
+                const success = await updateJSONBin();
+                if (success) {
+                    displayUsers();
+                    alert('🗑️ ইউজার ডিলিট হয়েছে!');
+                }
+            }
+        }
+
+        // ইউজার সার্চ ফাংশন
+        function searchUser() {
+            const searchUsername = document.getElementById('searchUsername').value.trim();
+            const searchResult = document.getElementById('searchResult');
+            
+            if (!searchUsername) {
+                alert('⚠️ ইউজারনেম দিন!');
+                return;
+            }
+            
+            const user = usersData.users.find(u => u.username === searchUsername);
+            
+            if (user) {
+                const today = new Date();
+                const expireDate = new Date(user.expireDate);
+                const isValid = expireDate >= today;
+                const currentDeviceCount = user.currentDevices ? user.currentDevices.length : 0;
+                const deviceLimit = user.deviceLimit;
+                
+                let canLogin = false;
+                let message = '';
+                
+                if (!isValid) {
+                    message = '❌ মেয়াদ উত্তীর্ণ!';
+                } else if (currentDeviceCount >= deviceLimit && deviceLimit !== 999) {
+                    message = `❌ ডিভাইস লিমিট শেষ! (বর্তমান: ${currentDeviceCount}/${deviceLimit})`;
+                } else {
+                    canLogin = true;
+                    message = `✅ ভ্যালিড ইউজার! (ডিভাইস: ${currentDeviceCount}/${deviceLimit === 999 ? '∞' : deviceLimit})`;
+                }
+                
+                searchResult.style.display = 'block';
+                searchResult.innerHTML = `
+                    <h4 style="margin-bottom: 10px;">🔍 সার্চ রেজাল্ট:</h4>
+                    <p><strong>👤 ইউজার:</strong> ${user.username}</p>
+                    <p><strong>📅 এক্সপায়ার:</strong> ${user.expireDate} ${isValid ? '✅' : '❌'}</p>
+                    <p><strong>📱 ডিভাইস লিমিট:</strong> ${deviceLimit === 999 ? 'আনলিমিটেড' : deviceLimit}</p>
+                    <p><strong>🖥️ বর্তমান ডিভাইস:</strong> ${currentDeviceCount}</p>
+                    <p><strong>📊 স্ট্যাটাস:</strong> ${message}</p>
+                    <p style="margin-top: 10px; padding: 10px; background: ${canLogin ? '#d4edda' : '#f8d7da'}; border-radius: 5px;">
+                        <strong>⏺️ লগিন স্ট্যাটাস:</strong> ${canLogin ? '✅ এই ইউজার লগিন করতে পারবে' : '❌ এই ইউজার লগিন করতে পারবে না'}
+                    </p>
+                `;
+            } else {
+                searchResult.style.display = 'block';
+                searchResult.innerHTML = `
+                    <h4 style="color: #721c24;">❌ ইউজার খুঁজে পাওয়া যায়নি!</h4>
+                    <p>'${searchUsername}' নামের কোন ইউজার নেই।</p>
+                `;
+            }
+        }
+
+        // JSONBin আপডেট ফাংশন
+        async function updateJSONBin() {
+            try {
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+                    method: 'PUT',
+                    headers: {
+                        'X-Master-Key': MASTER_KEY,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(usersData)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                showConnectionStatus('success');
+                return true;
+                
+            } catch (error) {
+                console.error('Error updating JSONBin:', error);
+                alert('❌ JSONBin আপডেট করতে সমস্যা হয়েছে! নেটওয়ার্ক চেক করুন।');
+                showConnectionStatus('error');
+                return false;
+            }
+        }
+    </script>
+</body>
+</html>
